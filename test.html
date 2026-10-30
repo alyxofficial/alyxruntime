@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alyxruntime Documentation</title>
+<link rel="icon" type="image/png" href="images/alyx.png">
+<style>
+:root{--bg:#fff;--surf:#f5f6f8;--text:#1c2028;--mut:#5d6675;--bd:#dfe3e9;--acc:#4f46e5;--code:#0f1420;--codet:#e6eaf2;--warn:#fff6e0;--warnb:#e8b93a;--sx-com:#7f8aa3;--sx-str:#a5d6a7;--sx-kw:#c792ea;--sx-num:#f78c6c;--sx-fn:#82aaff;--sx-flag:#89ddff;--sx-cmd:#ffcb6b;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--surf:#1a1f29;--text:#e8ebf1;--mut:#9aa4b5;--bd:#2a3140;--acc:#8b8cff;--code:#0a0d13;--warn:#2a2410;--warnb:#9a7a1c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12151c;--surf:#1a1f29;--text:#e8ebf1;--mut:#9aa4b5;--bd:#2a3140;--acc:#8b8cff;--code:#0a0d13;--warn:#2a2410;--warnb:#9a7a1c;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{display:flex;max-width:1100px;margin:0 auto}
+nav{width:240px;flex:none;padding:28px 20px;position:sticky;top:env(safe-area-inset-top,0px);align-self:flex-start;max-height:100vh;overflow:auto}
+nav .logo{font-weight:700;font-size:1.15rem;margin-bottom:4px}
+nav .tag{color:var(--mut);font-size:.85rem;margin-bottom:18px}
+nav a{display:block;padding:5px 10px;border-radius:6px;color:var(--mut);text-decoration:none;font-size:.93rem}
+nav a:hover{background:var(--surf);color:var(--text)}
+nav a.sub{padding-left:22px;font-size:.88rem}
+button.t{margin-top:16px;background:var(--surf);color:var(--text);border:1px solid var(--bd);border-radius:6px;padding:6px 10px;cursor:pointer}
+main{flex:1;min-width:0;padding:32px 28px 80px;max-width:800px}
+h1{font-size:2.1rem;margin:0 0 8px}h2{margin:2.6rem 0 .6rem;padding-top:1rem;border-top:1px solid var(--bd);font-size:1.5rem}h3{margin:1.8rem 0 .4rem;font-size:1.12rem}
+p.lead{font-size:1.15rem;color:var(--mut)}a{color:var(--acc)}
+code{background:var(--surf);border:1px solid var(--bd);padding:1px 5px;border-radius:4px;font:.88em ui-monospace,Menlo,Consolas,monospace}
+.cb{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codet);padding:14px 16px;border-radius:8px;overflow-x:auto;margin:0;font:.87rem/1.55 ui-monospace,Menlo,Consolas,monospace}
+pre code{background:none;border:0;padding:0;color:inherit}
+/* syntax highlighting (code blocks are always dark, so these colors are theme-independent) */
+.tk-com{color:var(--sx-com);font-style:italic}
+.tk-str{color:var(--sx-str)}
+.tk-kw{color:var(--sx-kw)}
+.tk-num{color:var(--sx-num)}
+.tk-fn{color:var(--sx-fn)}
+.tk-flag{color:var(--sx-flag)}
+.tk-cmd{color:var(--sx-cmd);font-weight:600}
+.cp{position:absolute;top:8px;right:8px;background:#ffffff1f;color:#fff;border:0;border-radius:5px;padding:3px 9px;font-size:.75rem;cursor:pointer}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.93rem}th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left;vertical-align:top}th{background:var(--surf)}
+.note{background:var(--warn);border-left:4px solid var(--warnb);padding:12px 16px;border-radius:6px;margin:16px 0}
+.pill{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:99px;background:var(--surf);border:1px solid var(--bd);color:var(--mut);margin-left:6px}
+li{margin:.3rem 0}
+@media (max-width:820px){.wrap{display:block}nav{position:static;width:auto;max-height:none;border-bottom:1px solid var(--bd);padding:16px}nav a{display:inline-block}nav a.sub{display:none}main{padding:20px 16px 60px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+<div class="logo"><img width="45px" src="images/alyx.png" href="https://github.com/alyxofficial/alyxruntime-source" ></div>
+<div class="tag">Remote Jupyter runtime</div>
+<a href="#install">Install</a>
+<a href="#usage">Usage</a>
+<a class="sub" href="#host">On the host</a>
+<a class="sub" href="#client">On the client</a>
+<a href="#python">From Python</a>
+<a href="#named">Stable URL</a>
+<a href="#options">stream options</a>
+<a href="#security">Security</a>
+<a href="#webui">Web UI</a>
+<button class="t" id="tg" type="button">Toggle theme</button>
+</nav>
+<main>
+<img width="100px" src="images/alyx.png" href="https://github.com/alyxofficial/alyxruntime-source" > 
+<h1 href="https://github.com/alyxofficial/alyxruntime-source" >αlyxruntime</h1>
+<p class="lead">Use any other computer’s CPU/GPU as your Jupyter runtime — like Colab’s “connect to local runtime”, but for <em>any</em> machine you control, from the command line or from Python.</p>
+<p>The host talks <em>out</em> to Cloudflare through <code>cloudflared</code>, so there is <strong>no port forwarding, no public IP, and HTTPS is included</strong> — it works from behind home routers, NAT and most firewalls.</p>
+
+<h2 id="install">Install</h2>
+<div class="cb"><pre><code># on the machine that SHARES its GPU/CPU
+pip install "alyxruntime[host]"
+
+# on the machine that CONNECTS (lighter)
+pip install alyxruntime</code></pre>
+<br>
+The source is here <a href="https://github.com/alyxofficial/alyxruntime-source" >here</a> and the PYPI page is <a href="https://pypi.org/project/alyxruntime/" >here</a>.
+</div>
+
+<h2 id="usage">Usage</h2>
+<h3 id="host">On the host <span class="pill">machine with the GPU</span></h3>
+<div class="cb"><pre><code>alyxruntime stream --allowed_ip 203.0.113.7                # your client's public IP
+alyxruntime stream --allowed_ip 203.0.113.7 10.0.0.0/24    # several IPs / CIDR ranges
+alyxruntime stream --allowed_ip all                        # any IP - the token is the only gate</code></pre></div>
+<p>It starts a Cloudflare quick tunnel (if <code>cloudflared</code> is missing it offers to download the official binary, or pass <code>--install-cloudflared</code>) and prints a ready-to-paste command with a random access token:</p>
+<div class="cb"><pre><code>alyxruntime connect 'https://random-words.trycloudflare.com/?token=...'</code></pre></div>
+<div class="note"><strong>Not sure what your public IP is?</strong> Run <code>alyxruntime connect</code> from the client anyway: the host replies <code>access denied for IP x.x.x.x. Ask the host to add it with --allowed_ip x.x.x.x</code>.</div>
+
+<h3 id="client">On the client</h3>
+<div class="cb"><pre><code>alyxruntime connect https://my-host:8765/?token=XXXX   # verifies, shows remote CPU/RAM/GPU, saves session
+alyxruntime run train.py            # run a script   (also .ipynb, `-c "code"`, or stdin with `-`)
+alyxruntime shell                   # interactive prompt; variables persist between commands
+alyxruntime info                    # remote CPU / RAM / GPU
+alyxruntime upload data.csv         # copy files to the host's working dir
+alyxruntime download model.pt
+alyxruntime restart                 # fresh kernel
+alyxruntime disconnect --kill-kernel</code></pre></div>
+<p>Plots (<code>plt.show()</code>) are saved locally to <code>./alyx_outputs/</code>.</p>
+<p>VS Code / JupyterLab also work: <em>Select Kernel → Existing Jupyter Server</em> → paste the same URL.</p>
+
+<h2 id="python">From Python</h2>
+<div class="cb"><pre><code>from alyxruntime import Runtime
+
+rt = Runtime.connect("https://my-host:8765/?token=XXXX")
+rt.run("import torch; print(torch.cuda.is_available())")
+res = rt.run("2 + 2", echo=False);  print(res.results)     # ['4']
+rt.upload("data.csv"); rt.download("out.pt")</code></pre></div>
+<p>Host side from Python:</p>
+<div class="cb"><pre><code>from alyxruntime import serve; serve(allowed_ip=["203.0.113.7"])</code></pre></div>
+
+<h2 id="named">Stable URL (named tunnel)</h2>
+<p>Quick tunnels get a new random URL every run. For a fixed hostname, create a tunnel in the Cloudflare dashboard (<em>Zero Trust → Networks → Tunnels</em>), point a public hostname at <code>http://localhost:9000</code>, then:</p>
+<div class="cb"><pre><code>alyxruntime stream --tunnel-token &lt;TOKEN&gt; --public-url https://gpu.example.com --port 9000 \
+                   --allowed_ip 203.0.113.7</code></pre></div>
+
+<h2 id="options"><code>stream</code> options</h2>
+<div class="tw"><table>
+<tr><th>Flag</th><th>Meaning</th></tr>
+<tr><td><code>--allowed_ip IP [IP...]</code></td><td>Public IPs / CIDR ranges (v4 or v6) allowed to connect, as seen by Cloudflare, or the word <code>all</code> (same as <code>--allow-any</code>). <strong>Required</strong> in tunnel mode.</td></tr>
+<tr><td><code>--allow-any</code></td><td>Accept any IP (the token is then your only protection).</td></tr>
+<tr><td><code>--no-tunnel</code></td><td>Skip Cloudflare; listen directly on <code>--host:--port</code> (you handle NAT; loopback is always allowed in this mode).</td></tr>
+<tr><td><code>--install-cloudflared</code></td><td>Download <code>cloudflared</code> automatically if it’s missing.</td></tr>
+<tr><td><code>--tunnel-token</code> / <code>--public-url</code> / <code>--port</code></td><td>Use a named tunnel with a stable hostname (see above).</td></tr>
+<tr><td><code>--gpus 0,1</code></td><td>Share only these GPU indices (<code>none</code> = CPU only). Run several <code>stream</code>s with different <code>--gpus</code> to give each client its own GPU.</td></tr>
+<tr><td><code>--token</code></td><td>Fixed access token instead of a random one.</td></tr>
+<tr><td><code>--root-dir</code></td><td>Directory the client can see (default: current dir).</td></tr>
+<tr><td><code>--tls-cert</code> / <code>--tls-key</code></td><td>HTTPS for <code>--no-tunnel</code> mode (not needed with a tunnel).</td></tr>
+<tr><td><code>--public-host</code></td><td>Hostname/IP to print in the connect URL with <code>--no-tunnel</code>.</td></tr>
+</table></div>
+
+<h2 id="security">Security — please read</h2>
+<div class="note">A runtime is <strong>remote code execution by design</strong>: whoever connects runs arbitrary code as the host user.</div>
+<ul>
+<li><strong>Two independent gates:</strong> the IP allowlist <em>and</em> a random token.</li>
+<li><strong>How the allowlist works with a tunnel:</strong> <code>cloudflared</code> reaches the host from <code>127.0.0.1</code>, so the socket address is useless for filtering. The gate instead reads the <code>CF-Connecting-IP</code> header, which Cloudflare’s edge sets itself, and checks <strong>every request</strong> against <code>--allowed_ip</code>. Requests with no such header (anything not coming through the tunnel) are refused, loopback gets no special pass, and each request is forced to <code>Connection: close</code> so one vetted connection can’t be reused by someone else.</li>
+<li>The quick-tunnel URL is public: anyone who learns it can <em>reach</em> the gate (and be refused). Treat the token like a password, and don’t paste the connect line in public places.</li>
+<li>Traffic passes through Cloudflare’s network (TLS to Cloudflare, then Cloudflare → your host over the tunnel); Cloudflare can technically see it. If that’s unacceptable, use <code>--no-tunnel</code> with your own VPN.</li>
+<li>IP allowlisting trusts that Cloudflare reports the true client IP. It won’t protect against someone sharing your NAT/VPN exit IP, and mobile/CGNAT or rotating-IP connections will need a CIDR range.</li>
+<li>Local users on the host can reach the gate on its loopback port and are trusted like the host user.</li>
+<li>Don’t run <code>stream</code> as root unless you mean it. The client’s saved token lives in <code>~/.alyxruntime/session.json</code> (0600).</li>
+<li>Cloudflare’s free quick tunnels are meant for development: no uptime guarantee, and you should read Cloudflare’s terms before using them for anything heavy or long-lived (use a named tunnel for that).</li>
+</ul>
+
+<h2 id="webui">Web UI (Colab-style notebook)</h2>
+<div class="cb"><pre><code>alyxruntime connect &lt;url&gt;   # once (or use the Connect button in the UI)
+alyxruntime ui              # opens http://127.0.0.1:8899 - notebook cells run on the remote GPU/CPU</code></pre></div>
+<p>Code/text cells, Shift+Enter / Ctrl+Enter, streaming output and plots, run all / interrupt / restart, remote file browser with upload/download, open/download <code>.ipynb</code>, dark mode. Notebooks autosave in the browser.</p>
+<p>The UI only listens on 127.0.0.1 and requires a per-launch secret, so other websites can’t drive your runtime.</p>
+</main>
+</div>
+<script>
+/* ---- tiny syntax highlighter (bash + python) ---- */
+(function(){
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  var PY_KW='from|import|as|def|return|if|else|elif|for|in|while|with|class|try|except|lambda|and|or|not|is|True|False|None';
+  var LANGS={
+    python:{
+      re:new RegExp('(#.*)|("(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\')|\\b('+PY_KW+')\\b|\\b(\\d+(?:\\.\\d+)?)\\b|\\b([A-Za-z_]\\w*)(?=\\()','g'),
+      cls:['com','str','kw','num','fn']
+    },
+    bash:{
+      re:/(#.*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|(?<=\s)(--?[A-Za-z][\w-]*)|^(alyxruntime|pip)(?=\s)|(?<=^(?:alyxruntime|pip) )([a-z][\w-]*)/gm,
+      cls:['com','str','flag','cmd','fn']
+    }
+  };
+  function highlight(src,lang){
+    var L=LANGS[lang],out='',last=0,m;
+    L.re.lastIndex=0;
+    while((m=L.re.exec(src))){
+      var i=1;while(i<m.length&&m[i]===undefined)i++;
+      if(i>=m.length){L.re.lastIndex++;continue}
+      out+=esc(src.slice(last,m.index))+'<span class="tk-'+L.cls[i-1]+'">'+esc(m[0])+'</span>';
+      last=m.index+m[0].length;
+      if(m[0].length===0)L.re.lastIndex++;
+    }
+    return out+esc(src.slice(last));
+  }
+  document.querySelectorAll('.cb pre code').forEach(function(c){
+    var src=c.textContent;
+    var lang=/(^|\n)\s*(from alyxruntime|rt\s*=|rt\.|res\s*=)/.test(src)?'python':'bash';
+    try{c.innerHTML=highlight(src,lang)}catch(e){}
+  });
+})();
+
+document.querySelectorAll('.cb').forEach(function(b){var c=document.createElement('button');c.className='cp';c.type='button';c.textContent='Copy';c.onclick=function(){var t=b.querySelector('code').innerText;try{navigator.clipboard.writeText(t);c.textContent='Copied';setTimeout(function(){c.textContent='Copy'},1200)}catch(e){}};b.appendChild(c)});
+document.getElementById('tg').onclick=function(){var r=document.documentElement,d=r.getAttribute('data-theme')?r.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.setAttribute('data-theme',d?'light':'dark')};
+</script>
+</body>
+</html>
