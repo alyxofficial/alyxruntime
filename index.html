@@ -6,7 +6,7 @@
 <title>Alyxruntime Documentation</title>
 <link rel="icon" type="image/png" href="images/alyx.png">
 <style>
-:root{--bg:#fff;--surf:#f5f6f8;--text:#1c2028;--mut:#5d6675;--bd:#dfe3e9;--acc:#4f46e5;--code:#0f1420;--codet:#e6eaf2;--warn:#fff6e0;--warnb:#e8b93a;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#fff;--surf:#f5f6f8;--text:#1c2028;--mut:#5d6675;--bd:#dfe3e9;--acc:#4f46e5;--code:#0f1420;--codet:#e6eaf2;--warn:#fff6e0;--warnb:#e8b93a;--sx-com:#7f8aa3;--sx-str:#a5d6a7;--sx-kw:#c792ea;--sx-num:#f78c6c;--sx-fn:#82aaff;--sx-flag:#89ddff;--sx-cmd:#ffcb6b;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--surf:#1a1f29;--text:#e8ebf1;--mut:#9aa4b5;--bd:#2a3140;--acc:#8b8cff;--code:#0a0d13;--warn:#2a2410;--warnb:#9a7a1c;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#12151c;--surf:#1a1f29;--text:#e8ebf1;--mut:#9aa4b5;--bd:#2a3140;--acc:#8b8cff;--code:#0a0d13;--warn:#2a2410;--warnb:#9a7a1c;color-scheme:dark}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:20px}
@@ -26,6 +26,14 @@ code{background:var(--surf);border:1px solid var(--bd);padding:1px 5px;border-ra
 .cb{position:relative;margin:12px 0}
 pre{background:var(--code);color:var(--codet);padding:14px 16px;border-radius:8px;overflow-x:auto;margin:0;font:.87rem/1.55 ui-monospace,Menlo,Consolas,monospace}
 pre code{background:none;border:0;padding:0;color:inherit}
+/* syntax highlighting (code blocks are always dark, so these colors are theme-independent) */
+.tk-com{color:var(--sx-com);font-style:italic}
+.tk-str{color:var(--sx-str)}
+.tk-kw{color:var(--sx-kw)}
+.tk-num{color:var(--sx-num)}
+.tk-fn{color:var(--sx-fn)}
+.tk-flag{color:var(--sx-flag)}
+.tk-cmd{color:var(--sx-cmd);font-weight:600}
 .cp{position:absolute;top:8px;right:8px;background:#ffffff1f;color:#fff;border:0;border-radius:5px;padding:3px 9px;font-size:.75rem;cursor:pointer}
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.93rem}th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left;vertical-align:top}th{background:var(--surf)}
 .note{background:var(--warn);border-left:4px solid var(--warnb);padding:12px 16px;border-radius:6px;margin:16px 0}
@@ -138,6 +146,39 @@ alyxruntime ui              # opens http://127.0.0.1:8899 - notebook cells run o
 </main>
 </div>
 <script>
+/* ---- tiny syntax highlighter (bash + python) ---- */
+(function(){
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  var PY_KW='from|import|as|def|return|if|else|elif|for|in|while|with|class|try|except|lambda|and|or|not|is|True|False|None';
+  var LANGS={
+    python:{
+      re:new RegExp('(#.*)|("(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\')|\\b('+PY_KW+')\\b|\\b(\\d+(?:\\.\\d+)?)\\b|\\b([A-Za-z_]\\w*)(?=\\()','g'),
+      cls:['com','str','kw','num','fn']
+    },
+    bash:{
+      re:/(#.*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|(?<=\s)(--?[A-Za-z][\w-]*)|^(alyxruntime|pip)(?=\s)|(?<=^(?:alyxruntime|pip) )([a-z][\w-]*)/gm,
+      cls:['com','str','flag','cmd','fn']
+    }
+  };
+  function highlight(src,lang){
+    var L=LANGS[lang],out='',last=0,m;
+    L.re.lastIndex=0;
+    while((m=L.re.exec(src))){
+      var i=1;while(i<m.length&&m[i]===undefined)i++;
+      if(i>=m.length){L.re.lastIndex++;continue}
+      out+=esc(src.slice(last,m.index))+'<span class="tk-'+L.cls[i-1]+'">'+esc(m[0])+'</span>';
+      last=m.index+m[0].length;
+      if(m[0].length===0)L.re.lastIndex++;
+    }
+    return out+esc(src.slice(last));
+  }
+  document.querySelectorAll('.cb pre code').forEach(function(c){
+    var src=c.textContent;
+    var lang=/(^|\n)\s*(from alyxruntime|rt\s*=|rt\.|res\s*=)/.test(src)?'python':'bash';
+    try{c.innerHTML=highlight(src,lang)}catch(e){}
+  });
+})();
+
 document.querySelectorAll('.cb').forEach(function(b){var c=document.createElement('button');c.className='cp';c.type='button';c.textContent='Copy';c.onclick=function(){var t=b.querySelector('code').innerText;try{navigator.clipboard.writeText(t);c.textContent='Copied';setTimeout(function(){c.textContent='Copy'},1200)}catch(e){}};b.appendChild(c)});
 document.getElementById('tg').onclick=function(){var r=document.documentElement,d=r.getAttribute('data-theme')?r.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.setAttribute('data-theme',d?'light':'dark')};
 </script>
