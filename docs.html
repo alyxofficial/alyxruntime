@@ -115,7 +115,7 @@ rt.upload("data.csv"); rt.download("out.pt")</code></pre></div>
 <div class="tw"><table>
 <tr><th>Flag</th><th>Meaning</th></tr>
 <tr><td><code>--allowed_ip IP [IP...]</code></td><td>Public IPs / CIDR ranges (v4 or v6) allowed to connect, as seen by Cloudflare, or the word <code>all</code> (same as <code>--allow-any</code>). <strong>Required</strong> in tunnel mode.</td></tr>
-<tr><td><code>--allow-any</code></td><td>Accept any IP (the token is then your only protection).</td></tr>
+<tr><td><code>--allow_any</code></td><td>Accept any IP (the token is then your only protection).</td></tr>
 <tr><td><code>--no-tunnel</code></td><td>Skip Cloudflare; listen directly on <code>--host:--port</code> (you handle NAT; loopback is always allowed in this mode).</td></tr>
 <tr><td><code>--install-cloudflared</code></td><td>Download <code>cloudflared</code> automatically if it’s missing.</td></tr>
 <tr><td><code>--tunnel-token</code> / <code>--public-url</code> / <code>--port</code></td><td>Use a named tunnel with a stable hostname (see above).</td></tr>
