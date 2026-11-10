@@ -57,6 +57,7 @@ aside li:hover{background:var(--hov)}aside ul{margin:8px 0;padding:0}
 .hl{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 textarea{position:relative;width:100%;border:0;background:none;color:var(--fg);resize:none;outline:0;display:block;overflow:hidden}
 .code textarea{color:transparent;caret-color:var(--fg)}
+textarea[hidden],.md[hidden]{display:none}
 textarea::selection{background:var(--sel)}
 .hl i,.cb i{font-style:normal}
 .k{color:var(--k)}.s{color:var(--s)}.n{color:var(--n)}.c{color:var(--c)}.f{color:var(--f)}.b{color:var(--b)}.hl .m{color:var(--warn)}.d{color:var(--d)}
@@ -163,13 +164,16 @@ const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 let cells=[],q=Promise.resolve(),abort=false,all=false,cwd='',rt=null,info=null;
 
 /* Forces tqdm.auto / tqdm.notebook to the plain-text version so bars render here */
-const BOOT=`try:
-    import tqdm.auto as _a, tqdm.std as _s
-    _a.tqdm=_s.tqdm; _a.trange=_s.trange
-    try:
-        import tqdm as _t, tqdm.notebook as _nb
-        _nb.tqdm=_s.tqdm; _nb.trange=_s.trange
-    except Exception: pass
+const BOOT=`import sys
+try:
+    import tqdm.std as _s
+    for _n in ('tqdm.auto','tqdm.autonotebook','tqdm.notebook'):
+        try:
+            __import__(_n)
+            _m=sys.modules[_n]
+            _m.tqdm=_s.tqdm
+            if hasattr(_m,'trange'): _m.trange=_s.trange
+        except Exception: pass
 except Exception: pass`;
 
 /* ---------- Jupyter client (browser, no server) ---------- */
@@ -222,7 +226,7 @@ class Runtime{
         if(k=='stream')emit(c.name=='stderr'?'stderr':'stdout',c.text);
         else if(k=='execute_result'||k=='display_data'){
           const d=c.data||{};
-          if(d['application/vnd.jupyter.widget-view+json'])return; // ignore ipywidgets (e.g. tqdm.notebook)
+          if(d['application/vnd.jupyter.widget-view+json']){emit('stderr','[progress widget not supported here - use: from tqdm import tqdm]\n');return}
           const png=d['image/png']||d['image/jpeg'];
           if(png)emit('img',png.replace(/\s/g,''));
           else if(d['image/svg+xml'])emit('img',btoa(unescape(encodeURIComponent(d['image/svg+xml']))));
